@@ -50,7 +50,15 @@ const mailsend = (mail, service_name, otp) => {
 }
 
 app.get('/', async (req, res) => {
-    res.send(`Backend running on PORT: ${port}`)
+    res.send(`Backend running on PORT: ${port}<br>
+        Endpoint: /sendmail<br>
+        Body:<br>
+        {<br>
+            "psw": "password",<br>
+            "mail": "receiver's mail",<br>
+            "service_name": "service name",<br>
+            "otp": "otp"<br>
+        }`)
 })
 
 app.post('/sendmail', async (req, res) => {
@@ -61,9 +69,15 @@ app.post('/sendmail', async (req, res) => {
     }
     try {
         mailsend(mail, service_name, otp);
-        res.status(200).send('Mail sent successfully');
+        res.status(200).send({
+            success: true,
+            message: 'Mail sent successfully'
+        });
     } catch (error) {
-        res.status(500).send('Mail not sent');
+        res.status(500).send({
+            success: false,
+            message: 'Error sending mail'
+        });
     }
 })
 
